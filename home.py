@@ -17,7 +17,7 @@ with st.expander('Other Group Guesses'):
         with col1:
             min_val = st.number_input(f'Group {i+2} Min', min_value=1, max_value=20, value=1, step=1, key=f'min_{i}')
         with col2:
-            max_val = st.number_input(f'Group {i+2} Max', min_value=1, max_value=20, value=20, step=1, key=f'max_{i}')
+            max_val = st.number_input(f'Group {i+2} Max', min_value=min_val, max_value=20, value=20, step=1, key=f'max_{i}')
         
         if min_val > max_val:
             st.error(f'Min cannot be greater than Max for Group {i+2}')

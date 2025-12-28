@@ -6,7 +6,7 @@ import plotly.express as px
 st.set_page_config(layout="wide")
 
 num_groups = st.number_input(label='Number of groups', value=5, step=1)
-your_roll = st.number_input(label='Your roll', min_value=1, max_value=20, step=1)
+your_roll = st.number_input(label='Your roll', min_value=1, max_value=20, step=1, value=10)
 
 num_simulations = 100_000
 # Generate random rolls for the remaining slots in each group

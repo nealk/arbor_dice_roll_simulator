@@ -44,6 +44,8 @@ summation = np.sum(simulations, axis=1)
 
 col1, col2, col3, col4 = st.columns(4)
 
+st.warning('The metrics shown above are the average across all simulations. This can be tricky to interpret for things like minimum and maximum values.')
+
 with col1:
     st.metric(label='Minimum', value=f"{np.average(minimum):.2f}")
 with col2:

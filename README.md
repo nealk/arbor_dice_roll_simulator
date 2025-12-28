@@ -2,7 +2,7 @@
 
 To run:
 
-```python
+```bash
 uv run streamlit run home.py
 ```
 

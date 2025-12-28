@@ -5,12 +5,30 @@ import plotly.express as px
 
 st.set_page_config(layout="wide")
 
-num_groups = st.number_input(label='Number of groups', value=5, step=1)
-your_roll = st.number_input(label='Your roll', min_value=1, max_value=20, step=1, value=10)
+with st.expander('Your inputs'):
+    num_groups = st.number_input(label='Number of groups', value=5, step=1)
+    your_roll = st.number_input(label='Your roll', min_value=1, max_value=20, step=1, value=10)
+
+
+with st.expander('Other Group Guesses'):
+    other_guesses = []
+    for i in range(num_groups - 1):
+        col1, col2 = st.columns(2)
+        with col1:
+            min_val = st.number_input(f'Group {i+2} Min', min_value=1, max_value=20, value=1, step=1, key=f'min_{i}')
+        with col2:
+            max_val = st.number_input(f'Group {i+2} Max', min_value=1, max_value=20, value=20, step=1, key=f'max_{i}')
+        
+        if min_val > max_val:
+            st.error(f'Min cannot be greater than Max for Group {i+2}')
+        
+        other_guesses.append((min_val, max_val))
 
 num_simulations = 100_000
-# Generate random rolls for the remaining slots in each group
-random_rolls = np.random.randint(1, 21, size=(num_simulations, num_groups - 1))
+# Generate random rolls for the remaining slots in each group based on guesses
+random_rolls = np.zeros((num_simulations, num_groups - 1))
+for i, (low, high) in enumerate(other_guesses):
+    random_rolls[:, i] = np.random.randint(low, high + 1, size=num_simulations)
 
 # Create a column of 'your_roll' to prepend to each simulation
 your_rolls_column = np.full((num_simulations, 1), your_roll)
@@ -47,9 +65,9 @@ choice = st.selectbox('Pick your metric', metrics.keys())
 
 df = pd.DataFrame(metrics)
 
-plot_type = st.radio("Select Plot Type", ["Histogram", "PMF (Probability)", "CDF (Cumulative)"])
+plot_type = st.radio("Select Plot Type", ["Histogram (Simulation)", "PMF (Probability)", "CDF (Cumulative Probability)"])
 
-if plot_type == "Histogram":
+if plot_type == "Histogram (Simulation)":
     fig = px.histogram(df, x=choice, title=f"Histogram of {choice}")
 elif plot_type == "PMF (Probability)":
     fig = px.histogram(df, x=choice, histnorm='probability', title=f"PMF of {choice}")
